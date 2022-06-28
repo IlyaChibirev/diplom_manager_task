@@ -1,58 +1,97 @@
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class TodosTests {
 
-    Todos sut;
+    @BeforeAll
+    public static void initSuite() {
+        System.out.println("Running 'TodosTests' for methods of class \"Todos\"");
+    }
+
+    @AfterAll
+    public static void completeSuite() {
+        System.out.println("All 'TodosTests' complete! ");
+    }
 
     @BeforeEach
-    public void init() {
-        sut = new Todos();
+    public void initTest() {
+        System.out.println("Starting new test");
+    }
+
+    @AfterEach
+    public void finalizeTest() {
+        System.out.println("Test complete!");
     }
 
     @Test
-    public void testTodos_add() {
-        String task1 = "Помыть посуду";
-        String task2 = "Выучить Java";
-        String expected = "Выучить Java Помыть посуду";
+    @DisplayName("Test \"addTask()\" method")
+    public void addTaskTest(TestInfo addTaskTestInfo) {
 
-        sut.addTask(task1);
-        sut.addTask(task2);
-        String result = sut.getAllTasks();
+        Todos todo = new Todos();
 
-        assertThat(result, equalTo(expected));
+        todo.addTask("Doing something!");
+
+        boolean actual = todo.getAllTasks().contains("Doing something!");
+
+        Assertions.assertTrue(actual, addTaskTestInfo.getDisplayName() + " NO complete!");
+        System.out.println(addTaskTestInfo.getDisplayName() + " complete!");
     }
 
     @Test
-    public void testTodos_remove() {
-        String task1 = "Помыть посуду";
-        String task2 = "Выучить Java";
-        String expected = "Выучить Java";
+    @DisplayName("Test \"removeTask()\" method")
+    public void removeTaskTest(TestInfo removeTaskTestInfo) {
 
-        sut.addTask(task1);
-        sut.addTask(task2);
-        sut.removeTask("Помыть посуду");
-        String result = sut.getAllTasks();
+        Todos todo = new Todos();
 
-        assertThat(result, equalTo(expected));
+        todo.addTask("Doing something!");
+        todo.removeTask("Doing something!");
+
+        boolean actual = todo.getAllTasks().contains("Doing something!");
+
+        Assertions.assertFalse(actual, removeTaskTestInfo.getDisplayName() + " NO complete!");
+        System.out.println(removeTaskTestInfo.getDisplayName() + " complete!");
+    }
+
+
+    @Test
+    @DisplayName("Test \"getAllTask()\" method")
+    public void getAllTasksTest(TestInfo getAllTasksTestInfo) {
+
+        Todos todo = new Todos();
+
+        String expected = "First task" +
+                " " +
+                "Second task" +
+                " " +
+                "Third task" +
+                " ";
+
+        todo.addTask("First task");
+        todo.addTask("Second task");
+        todo.addTask("Third task");
+
+        Assertions.assertEquals(expected, todo.getAllTasks(), getAllTasksTestInfo.getDisplayName() + " NO complete!");
+        System.out.println(getAllTasksTestInfo.getDisplayName() + " complete!");
     }
 
     @Test
-    public void testTodos_getAllTasks() {
-        String task1 = "Пробежка";
-        String task2 = "Акробатика";
-        String task3 = "Учёба";
-        String expected = "Акробатика Пробежка Учёба";
+    @DisplayName("Test \"getAllTasksAsList()\" method")
+    public void getAllTasksAsListTest(TestInfo getAllTasksAsListTestInfo) {
+        Todos todo = new Todos();
 
-        sut.addTask(task1);
-        sut.addTask(task2);
-        sut.addTask(task3);
-        String result = sut.getAllTasks();
+        todo.addTask("First task");
+        todo.addTask("Second task");
+        todo.addTask("Third task");
 
-        assertThat(result, equalTo(expected));
+        List<String> expected = new ArrayList<>(Arrays.asList("First task", "Second task", "Third task"));
+
+        List<String> actual = todo.getAllTasksAsList();
+
+        Assertions.assertEquals(expected, actual, getAllTasksAsListTestInfo.getDisplayName() + " NO complete!");
+        System.out.println(getAllTasksAsListTestInfo.getDisplayName() + " complete!");
     }
 }
 
